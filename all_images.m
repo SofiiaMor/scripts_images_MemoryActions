@@ -99,3 +99,18 @@ for borderi = border
     end
 end
 
+%% export all x,y coordinates of the tringle and square in xls file
+
+% normalize relative to the middle of the screen (0,0) in Psychopy
+allXY = [x_square' y_square' x_triangle' y_triangle']-0.5;
+
+output = num2cell([(1:4*n)' allXY]);
+typeImag = cell(4*n,1);
+typeImag(1:n)={'Sq2Cr_Tr2Br'};
+typeImag(n+1:2*n)={'Tr2Cr_Sq2Br'};
+typeImag(2*n+1:3*n)={'Tr2Cr_Tr2Br'};
+typeImag(3*n+1:end)={'Sq2Cr_Sq2Br'};
+
+variableNames = {'n image', 'x_square', 'y_square', 'x_triangle', 'y_triangle', 'image type'};
+xlsfilename = ['TrSqCoordinates_' datestr(now, 'yyyy-mm-dd_HH-MM-SS') '.xls'];           
+xlswrite(xlsfilename,[variableNames; output, typeImag]); % write to xls file
