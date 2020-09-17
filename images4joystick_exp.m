@@ -11,6 +11,9 @@ y_square = zeros(1,n*2);
 x_triangle = zeros(1,n*2);
 y_triangle = zeros(1,n*2);
 
+% initialize vector of distances between square and triangle in all images
+ObjectDist = zeros(1,n*2);
+
 % intervals of x,y changes for the square locations from -0.25 to 0.25, (0,0) - the middle of the screen
 percentX_square = [-25:-15, 15:25];
 percentY_square = [-25:-15, 15:25];
@@ -51,6 +54,7 @@ for trianglei = triangle
             SqTr_angle = acos((CrTr_distance^2+CrSq_distance^2-SqTr_distance^2)/(2*CrTr_distance*CrSq_distance));
         end
         
+        ObjectDist(imagei+j) = SqTr_distance;
         x_triangle(imagei+j)=triangle_X;
         y_triangle(imagei+j)=triangle_Y;
         
@@ -64,11 +68,9 @@ same = 1;  % 1 - the same objects (circles), 0 - different (square and triangle)
 for imagei = 1:2*n
     % plot square and triangle
     figure(1), clf
-    %h1=plot(x_square(imagei),y_square(imagei), 'o', 'LineWidth', 1,'MarkerSize',11,'MarkerEdgeColor',[0.3 0.3 0.3],'MarkerFaceColor',[0.3 0.3 0.3]);
     h1=plot(x_square(imagei),y_square(imagei));
     hold on
     h2=plot(x_triangle(imagei),y_triangle(imagei));
-    %h2=plot(x_triangle(imagei),y_triangle(imagei), 'o','LineWidth', 1, 'MarkerSize',11,'MarkerEdgeColor',[0.3 0.3 0.3],'MarkerFaceColor',[0.3 0.3 0.3]);
     if same == 1
         properties1 = {'Marker','LineWidth','MarkerSize','MarkerEdgeColor','MarkerFaceColor'};
         values1 = {'o',1,11,[0.3 0.3 0.3],[0.3 0.3 0.3]};
@@ -97,6 +99,8 @@ for imagei = 1:2*n
     end
 end
 %% export coordinates of objects in xls table
+minObjectDist = zeros(1,n*2);
+minObjectDist(1) = min(ObjectDist);
 output = num2cell([x_square' y_square' x_triangle' y_triangle']);
 typeImag = cell(2*n,1);
 if same == 0
@@ -111,6 +115,6 @@ else
         typeImag{k} = [num2str(k) '_circles.png'];
     end
 end
-variableNames = {'x_square', 'y_square', 'x_triangle', 'y_triangle', 'image name'};
+variableNames = {'x_square', 'y_square', 'x_triangle', 'y_triangle', 'image name', 'min distance between objects'};
 xlsfilename = ['TrSqCoordinates2_' datestr(now, 'yyyy-mm-dd_HH-MM-SS') '.xls'];           
-xlswrite(xlsfilename,[variableNames; output, typeImag]); % write to xls file
+xlswrite(xlsfilename,[variableNames; output, typeImag, num2cell(minObjectDist')]); % write to xls file
