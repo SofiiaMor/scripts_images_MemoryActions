@@ -3,7 +3,7 @@
 % 50% - square is closer to the cross, 50% - triangle
 
 % number of unique images of each type
-n = 32;
+n = 40;
 
 % initialize matrix for all x, y coordinates of triangle and square
 x_square = zeros(1,n*2);
@@ -72,8 +72,10 @@ for imagei = 1:2*n
     hold on
     h2=plot(x_triangle(imagei),y_triangle(imagei));
     if same == 1
-        properties1 = {'Marker','LineWidth','MarkerSize','MarkerEdgeColor','MarkerFaceColor'};
-        values1 = {'o',1,11,[0.3 0.3 0.3],[0.3 0.3 0.3]};
+%         properties1 = {'Marker','LineWidth','MarkerSize','MarkerEdgeColor','MarkerFaceColor'}; % filled in color circles
+%         values1 = {'o',1,11,[0.3 0.3 0.3],[0.3 0.3 0.3]};
+        properties1 = {'Color','Marker','LineWidth','MarkerSize'}; 
+        values1 = {'k','o',1,12}; % empty circles 
         properties2 = properties1;
         values2 = values1;
     else
@@ -87,6 +89,7 @@ for imagei = 1:2*n
     axis([-0.5 0.5 -0.5 0.5]);
     axis square;
     set(gca,'xtick',[],'ytick',[],'Xcolor','none','Ycolor','none') % remove axes
+    % plot(0,0,'k+')% cross in the middle 
     % save images
     if same == 0
         if imagei<=n
